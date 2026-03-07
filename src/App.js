@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   Users,
   Trophy,
@@ -135,7 +135,6 @@ const SectionHeader = ({ title, subtitle }) => (
 );
 
 const RosterCard = ({ member, role, isOwner }) => {
-  // This state catches broken image links so it doesn't show an ugly error icon
   const [imgError, setImgError] = useState(false);
 
   return (
@@ -201,23 +200,34 @@ export default function App() {
     0
   );
 
-  // Collect all live members
-  const liveMembers = [
-    ...ROSTER.owners.map((m) => ({ ...m, role: "owner" })),
-    ...ROSTER.moderators.map((m) => ({ ...m, role: "moderator" })),
-    ...ROSTER.discordMod.map((m) => ({ ...m, role: "discord" })),
-    ...ROSTER.members.map((m) => ({ ...m, role: "member" })),
-  ].filter((m) => m.isLive);
+  // FIX: Memoize particles so random positions don't regenerate on every render
+  const particles = useMemo(
+    () =>
+      [...Array(20)].map((_, i) => ({
+        id: i,
+        width: Math.random() * 4 + 2,
+        height: Math.random() * 4 + 2,
+        left: Math.random() * 100,
+        top: Math.random() * 100,
+        delay: Math.random() * 5,
+        opacity: Math.random() * 0.5,
+      })),
+    []
+  );
+
+  // FIX: Memoize liveMembers so it's not recomputed on every render
+  const liveMembers = useMemo(
+    () =>
+      [
+        ...ROSTER.owners.map((m) => ({ ...m, role: "owner" })),
+        ...ROSTER.moderators.map((m) => ({ ...m, role: "moderator" })),
+        ...ROSTER.discordMod.map((m) => ({ ...m, role: "discord" })),
+        ...ROSTER.members.map((m) => ({ ...m, role: "member" })),
+      ].filter((m) => m.isLive),
+    []
+  );
 
   useEffect(() => {
-    // Automatically inject Tailwind CSS so the styling works anywhere!
-    if (!document.getElementById("tailwind-cdn")) {
-      const script = document.createElement("script");
-      script.id = "tailwind-cdn";
-      script.src = "https://cdn.tailwindcss.com";
-      document.head.appendChild(script);
-    }
-
     const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
@@ -299,6 +309,16 @@ export default function App() {
           backdrop-filter: blur(12px);
           border: 1px solid rgba(26, 28, 41, 1);
         }
+
+        /* FIX: Replace non-standard animate-in/slide-in-from-top with a real keyframe */
+        @keyframes slideDown {
+          from { opacity: 0; transform: translateY(-12px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .mobile-menu-enter {
+          animation: slideDown 0.25s ease forwards;
+        }
       `}</style>
 
       {/* --- Navbar --- */}
@@ -347,9 +367,9 @@ export default function App() {
           </button>
         </div>
 
-        {/* Mobile Menu */}
+        {/* FIX: Mobile Menu — uses valid mobile-menu-enter animation instead of animate-in */}
         {mobileMenuOpen && (
-          <div className="md:hidden absolute top-full left-0 w-full bg-[#030014] border-b border-[#22D3EE]/20 py-8 flex flex-col items-center gap-6 animate-in slide-in-from-top duration-300">
+          <div className="mobile-menu-enter md:hidden absolute top-full left-0 w-full bg-[#030014] border-b border-[#22D3EE]/20 py-8 flex flex-col items-center gap-6">
             {["Home", "About", "Roster", "Socials", "Join"].map((item) => (
               <button
                 key={item}
@@ -371,18 +391,18 @@ export default function App() {
         {/* Grid Background */}
         <div className="absolute inset-0 bg-grid pointer-events-none" />
 
-        {/* Particle background */}
-        {[...Array(20)].map((_, i) => (
+        {/* FIX: Use memoized particle data so positions are stable across renders */}
+        {particles.map((p) => (
           <div
-            key={i}
+            key={p.id}
             className="particle"
             style={{
-              width: Math.random() * 4 + 2 + "px",
-              height: Math.random() * 4 + 2 + "px",
-              left: Math.random() * 100 + "%",
-              top: Math.random() * 100 + "%",
-              animationDelay: Math.random() * 5 + "s",
-              opacity: Math.random() * 0.5,
+              width: p.width + "px",
+              height: p.height + "px",
+              left: p.left + "%",
+              top: p.top + "%",
+              animationDelay: p.delay + "s",
+              opacity: p.opacity,
             }}
           />
         ))}
@@ -619,7 +639,7 @@ export default function App() {
             </div>
           </div>
 
-          {/* Members Header Match exactly to screenshot */}
+          {/* Members */}
           <div>
             <div className="flex items-start gap-5 mb-10">
               <div className="w-[52px] h-[52px] border border-[#123842] flex-shrink-0 flex items-center justify-center bg-transparent">
@@ -722,7 +742,6 @@ export default function App() {
 
               <div className="grid md:grid-cols-2 gap-12 items-start">
                 <div className="flex flex-col gap-5">
-                  {/* DM Buttons styled exactly like uploaded image */}
                   <a
                     href="https://tiktok.com/@lolitsphe"
                     target="_blank"
