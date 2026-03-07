@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { Analytics } from "@vercel/analytics/react";
 import {
   Users,
   Trophy,
@@ -854,7 +853,6 @@ export default function App() {
           </div>
         </div>
       </footer>
-      <Analytics />
     </div>
   );
 }
