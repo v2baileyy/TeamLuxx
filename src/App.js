@@ -24,7 +24,7 @@ const ROSTER = {
       handle: "@lolitsphe",
       link: "https://tiktok.com/@lolitsphe",
       twitch: "lolitsphe",
-      isLive: true,
+      isLive: false,
       livePlatform: "twitch",
     },
     {
@@ -46,7 +46,7 @@ const ROSTER = {
       handle: "@xsvrosettv",
       link: "https://tiktok.com/@xsvrosettv",
       twitch: "xsvrosettv",
-      isLive: true,
+      isLive: false,
       livePlatform: "twitch",
     },
   ],
@@ -67,7 +67,7 @@ const ROSTER = {
       name: "Bootz",
       handle: "@b00tzinaction",
       link: "https://tiktok.com/@b00tzinaction",
-      isLive: true,
+      isLive: false,
       livePlatform: "tiktok",
     },
     { name: "Star", handle: "@star_e25", link: "https://tiktok.com/@star_e25" },
@@ -228,6 +228,14 @@ export default function App() {
   );
 
   useEffect(() => {
+    // Re-added the Tailwind script just for this preview window so the styling works here!
+    if (!document.getElementById("tailwind-cdn")) {
+      const script = document.createElement("script");
+      script.id = "tailwind-cdn";
+      script.src = "https://cdn.tailwindcss.com";
+      document.head.appendChild(script);
+    }
+
     const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
@@ -639,7 +647,7 @@ export default function App() {
             </div>
           </div>
 
-          {/* Members */}
+          {/* Members Header Match exactly to screenshot */}
           <div>
             <div className="flex items-start gap-5 mb-10">
               <div className="w-[52px] h-[52px] border border-[#123842] flex-shrink-0 flex items-center justify-center bg-transparent">
@@ -836,6 +844,8 @@ export default function App() {
           <div className="flex items-center gap-4">
             <a
               href="https://tiktok.com/@luxxesports"
+              target="_blank"
+              rel="noopener noreferrer"
               className="w-10 h-10 rounded-full bg-[#0c0714] border border-[#2a2438] flex items-center justify-center text-white hover:bg-[#22D3EE] hover:text-[#030014] hover:border-[#22D3EE] transition-all hover:shadow-[0_0_15px_rgba(34,211,238,0.4)]"
             >
               <Video className="w-5 h-5" />
