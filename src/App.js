@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 import {
   Users,
   Trophy,
@@ -260,6 +261,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#030014] text-white font-rajdhani selection:bg-[#22D3EE] selection:text-[#030014]">
+      <SpeedInsights />
       <ScanLines />
 
       {/* --- Styles --- */}
