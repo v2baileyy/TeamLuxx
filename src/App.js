@@ -82,11 +82,6 @@ const ROSTER = {
       link: "https://tiktok.com/@iamtwisttz",
     },
     {
-      name: "Reapzzy",
-      handle: "@reapzzy_fn",
-      link: "https://tiktok.com/@reapzzy_fn",
-    },
-    {
       name: "Angel",
       handle: "@luvgojocream",
       link: "https://www.tiktok.com/@luvgojocream",
@@ -101,6 +96,11 @@ const ROSTER = {
       handle: "@r1jasmine",
       link: "https://www.tiktok.com/@r1jasmine?lang=en",
     },
+    {
+      name: "zb.jsn",
+      handle: "@zb.jsn",
+      link: "https://www.tiktok.com/@zb.jsn?lang=en",
+    },
   ],
 };
 
@@ -108,6 +108,77 @@ const LOGO_URL =
   "https://customer-assets.emergentagent.com/job_neon-luxx/artifacts/2jnpaax9_C01A0F60-D3B1-4666-99D2-A8CCDDFE1BB8.webp";
 
 // --- Components ---
+
+const BrandShowcase = () => (
+  <div className="relative w-full max-w-[550px] mx-auto aspect-square bg-[#0c0714]/40 rounded-[2.5rem] md:rounded-[3rem] border border-[#22D3EE]/10 flex items-center justify-center overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.3)]">
+    {/* Grid Background */}
+    <div className="absolute inset-0 bg-grid opacity-30" />
+
+    {/* Center Logo */}
+    <div
+      className="relative z-10 w-[45%] h-[45%] rounded-full overflow-hidden shadow-[0_0_50px_rgba(34,211,238,0.2)] ring-1 ring-[#22D3EE]/20 flex-shrink-0 animate-floating-badge"
+      style={{ animationDuration: "8s" }}
+    >
+      <img
+        src={LOGO_URL}
+        alt="Luxx"
+        className="w-full h-full object-cover scale-[1.05]"
+      />
+    </div>
+
+    {/* Badge 1: Premium */}
+    <div
+      className="absolute top-[12%] left-[4%] bg-[#070514]/95 border border-white/10 px-3 py-2 md:px-5 md:py-3 rounded-xl z-20 shadow-2xl backdrop-blur-md animate-floating-badge"
+      style={{ animationDelay: "0.5s" }}
+    >
+      <div className="font-orbitron font-black text-white text-[10px] md:text-lg mb-0.5 drop-shadow-md leading-none">
+        PREMIUM
+      </div>
+      <div className="font-orbitron text-white/50 text-[7px] md:text-[9px] uppercase tracking-[0.2em] font-bold">
+        BRAND IDENTITY
+      </div>
+    </div>
+
+    {/* Badge 2: Roster */}
+    <div
+      className="absolute top-[28%] right-[4%] bg-[#070514]/95 border border-white/10 px-3 py-2 md:px-5 md:py-3 rounded-xl z-20 shadow-2xl backdrop-blur-md animate-floating-badge"
+      style={{ animationDelay: "1.2s" }}
+    >
+      <div className="font-orbitron font-black text-white text-[10px] md:text-lg mb-0.5 drop-shadow-md leading-none">
+        ROSTER
+      </div>
+      <div className="font-orbitron text-white/50 text-[7px] md:text-[9px] uppercase tracking-[0.2em] font-bold">
+        PLAYERS & CREATORS
+      </div>
+    </div>
+
+    {/* Badge 3: Luxx */}
+    <div
+      className="absolute bottom-[25%] right-[6%] bg-[#070514]/95 border border-white/10 px-3 py-2 md:px-5 md:py-3 rounded-xl z-20 shadow-2xl backdrop-blur-md animate-floating-badge"
+      style={{ animationDelay: "0.8s" }}
+    >
+      <div className="font-orbitron font-black text-white text-[10px] md:text-lg mb-0.5 drop-shadow-md leading-none">
+        LUXX
+      </div>
+      <div className="font-orbitron text-white/50 text-[7px] md:text-[9px] uppercase tracking-[0.2em] font-bold">
+        SHINE DIFFERENT
+      </div>
+    </div>
+
+    {/* Badge 4: Community */}
+    <div
+      className="absolute bottom-[12%] left-[6%] bg-[#070514]/95 border border-white/10 px-3 py-2 md:px-5 md:py-3 rounded-xl z-20 shadow-2xl backdrop-blur-md animate-floating-badge"
+      style={{ animationDelay: "1.5s" }}
+    >
+      <div className="font-orbitron font-black text-white text-[10px] md:text-lg mb-0.5 drop-shadow-md leading-none">
+        COMMUNITY
+      </div>
+      <div className="font-orbitron text-white/50 text-[7px] md:text-[9px] uppercase tracking-[0.2em] font-bold">
+        BUILT TO GROW
+      </div>
+    </div>
+  </div>
+);
 
 const ScanLines = () => (
   <div
@@ -200,7 +271,7 @@ export default function App() {
     0
   );
 
-  // FIX: Memoize particles so random positions don't regenerate on every render
+  // Memoize particles so random positions don't regenerate on every render
   const particles = useMemo(
     () =>
       [...Array(20)].map((_, i) => ({
@@ -215,7 +286,7 @@ export default function App() {
     []
   );
 
-  // FIX: Memoize liveMembers so it's not recomputed on every render
+  // Memoize liveMembers so it's not recomputed on every render
   const liveMembers = useMemo(
     () =>
       [
@@ -318,7 +389,17 @@ export default function App() {
           border: 1px solid rgba(26, 28, 41, 1);
         }
 
-        /* FIX: Replace non-standard animate-in/slide-in-from-top with a real keyframe */
+        /* Floating Badge Animation */
+        @keyframes floating-badge {
+          0% { transform: translateY(0px); }
+          50% { transform: translateY(-10px); }
+          100% { transform: translateY(0px); }
+        }
+
+        .animate-floating-badge {
+          animation: floating-badge 6s infinite ease-in-out;
+        }
+
         @keyframes slideDown {
           from { opacity: 0; transform: translateY(-12px); }
           to   { opacity: 1; transform: translateY(0); }
@@ -345,7 +426,7 @@ export default function App() {
             <img
               src={LOGO_URL}
               alt="Logo"
-              className="w-10 h-10 object-contain drop-shadow-[0_0_8px_#22D3EE]"
+              className="w-10 h-10 rounded-full overflow-hidden object-cover border border-[#22D3EE]/30 drop-shadow-[0_0_8px_#22D3EE]"
             />
             <span className="font-orbitron font-black text-xl tracking-tighter text-white">
               TEAM <span className="text-[#22D3EE]">LUXX</span>
@@ -375,7 +456,7 @@ export default function App() {
           </button>
         </div>
 
-        {/* FIX: Mobile Menu — uses valid mobile-menu-enter animation instead of animate-in */}
+        {/* Mobile Menu */}
         {mobileMenuOpen && (
           <div className="mobile-menu-enter md:hidden absolute top-full left-0 w-full bg-[#030014] border-b border-[#22D3EE]/20 py-8 flex flex-col items-center gap-6">
             {["Home", "About", "Roster", "Socials", "Join"].map((item) => (
@@ -394,12 +475,12 @@ export default function App() {
       {/* --- Hero Section --- */}
       <header
         id="home"
-        className="relative h-screen flex flex-col items-center justify-center text-center px-6 overflow-hidden"
+        className="relative min-h-screen flex items-center justify-center text-center lg:text-left px-6 pt-28 pb-12 overflow-hidden"
       >
         {/* Grid Background */}
         <div className="absolute inset-0 bg-grid pointer-events-none" />
 
-        {/* FIX: Use memoized particle data so positions are stable across renders */}
+        {/* Use memoized particle data so positions are stable across renders */}
         {particles.map((p) => (
           <div
             key={p.id}
@@ -415,47 +496,47 @@ export default function App() {
           />
         ))}
 
-        <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-center">
-          <div className="w-48 h-48 md:w-[220px] md:h-[220px] rounded-full overflow-hidden mb-8 shadow-[0_0_50px_rgba(34,211,238,0.2)] flex-shrink-0 ring-1 ring-[#22D3EE]/20">
-            <img
-              src={LOGO_URL}
-              alt="Luxx Logo"
-              className="w-full h-full object-cover scale-[1.05]"
-            />
+        <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col-reverse lg:flex-row items-center justify-between gap-12 lg:gap-8">
+          {/* Left Text Content */}
+          <div className="flex-1 flex flex-col items-center lg:items-start">
+            <p className="font-orbitron font-bold text-[#22D3EE] tracking-[0.25em] text-xs md:text-sm uppercase mb-4 drop-shadow-[0_0_8px_rgba(34,211,238,0.3)]">
+              Elite Gaming Organization
+            </p>
+
+            <h1 className="font-orbitron text-6xl sm:text-7xl lg:text-[100px] font-black leading-[0.85] tracking-tight mb-8">
+              <span className="block text-white">TEAM</span>
+              <span className="block text-[#22D3EE]">LUXX</span>
+            </h1>
+
+            <p className="font-rajdhani text-lg md:text-[19px] text-[#8b92a5] mb-10 max-w-xl leading-relaxed">
+              Dominating the competition. Building legends. Welcome to the next
+              generation of esports excellence.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-5">
+              <button
+                onClick={() => scrollTo("roster")}
+                className="px-10 py-4 bg-[#22D3EE] text-[#030014] font-orbitron font-black text-[13px] uppercase tracking-widest rounded-sm transition-all hover:shadow-[0_0_30px_rgba(34,211,238,0.5)] hover:scale-105"
+              >
+                View Roster
+              </button>
+              <button
+                onClick={() => scrollTo("join")}
+                className="px-10 py-4 bg-[#070514]/70 border border-[#22D3EE]/30 text-[#22D3EE] font-orbitron font-black text-[13px] uppercase tracking-widest rounded-sm transition-all hover:bg-[#22D3EE]/10 hover:border-[#22D3EE]"
+              >
+                Join Team
+              </button>
+            </div>
           </div>
 
-          <p className="font-orbitron font-bold text-[#22D3EE] tracking-[0.25em] text-xs md:text-sm uppercase mb-6 drop-shadow-[0_0_8px_rgba(34,211,238,0.3)]">
-            Elite Gaming Organization
-          </p>
-
-          <h1 className="font-orbitron text-7xl md:text-[110px] font-black leading-[0.85] tracking-tight mb-8">
-            <span className="block text-white">TEAM</span>
-            <span className="block text-[#22D3EE]">LUXX</span>
-          </h1>
-
-          <p className="font-rajdhani text-lg md:text-[19px] text-[#8b92a5] mb-10 max-w-2xl leading-relaxed">
-            Dominating the competition. Building legends. Welcome to the next
-            generation of esports excellence.
-          </p>
-
-          <div className="flex flex-col sm:flex-row gap-5">
-            <button
-              onClick={() => scrollTo("roster")}
-              className="px-10 py-4 bg-[#22D3EE] text-[#030014] font-orbitron font-black text-[13px] uppercase tracking-widest rounded-sm transition-all hover:shadow-[0_0_30px_rgba(34,211,238,0.5)] hover:scale-105"
-            >
-              View Roster
-            </button>
-            <button
-              onClick={() => scrollTo("join")}
-              className="px-10 py-4 bg-[#070514]/70 border border-[#22D3EE]/30 text-[#22D3EE] font-orbitron font-black text-[13px] uppercase tracking-widest rounded-sm transition-all hover:bg-[#22D3EE]/10 hover:border-[#22D3EE]"
-            >
-              Join Team
-            </button>
+          {/* Right Brand Showcase */}
+          <div className="flex-1 w-full max-w-[500px] lg:max-w-none">
+            <BrandShowcase />
           </div>
         </div>
 
         {/* Scroll Indicator */}
-        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce">
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 animate-bounce">
           <div className="w-1 h-12 rounded-full bg-gradient-to-b from-[#22D3EE] to-transparent" />
         </div>
       </header>
@@ -647,7 +728,7 @@ export default function App() {
             </div>
           </div>
 
-          {/* Members Header Match exactly to screenshot */}
+          {/* Members Header */}
           <div>
             <div className="flex items-start gap-5 mb-10">
               <div className="w-[52px] h-[52px] border border-[#123842] flex-shrink-0 flex items-center justify-center bg-transparent">
@@ -827,7 +908,7 @@ export default function App() {
             <img
               src={LOGO_URL}
               alt="Logo"
-              className="w-10 h-10 object-contain"
+              className="w-10 h-10 rounded-full overflow-hidden object-cover border border-[#22D3EE]/30"
             />
             <div className="font-orbitron font-black text-lg tracking-tighter">
               TEAM <span className="text-[#22D3EE]">LUXX</span>
