@@ -31,8 +31,6 @@ const ROSTER = {
       name: "Gia",
       handle: "@starlitgiaxo",
       link: "https://tiktok.com/@starlitgiaxo",
-      image:
-        "https://i.pinimg.com/originals/81/6a/98/816a987a5203f09d984e7a3ace513f4e.jpg",
     },
   ],
   moderators: [
@@ -100,6 +98,26 @@ const ROSTER = {
       name: "zb.jsn",
       handle: "@zb.jsn",
       link: "https://www.tiktok.com/@zb.jsn?lang=en",
+    },
+    {
+      name: "Cupid",
+      handle: "@cupidfn_",
+      link: "https://www.tiktok.com/@cupidfn_",
+    },
+    {
+      name: "Cherry",
+      handle: "@ttvcherryxo",
+      link: "https://www.tiktok.com/@ttvcherryxo",
+    },
+    {
+      name: "Sippin",
+      handle: "@isippin",
+      link: "https://www.tiktok.com/@isippin",
+    },
+    {
+      name: "Arlyn",
+      handle: "@xo_arlynn",
+      link: "https://www.tiktok.com/@xo_arlynn",
     },
   ],
 };
@@ -299,7 +317,7 @@ export default function App() {
   );
 
   useEffect(() => {
-    // Re-added the Tailwind script just for this preview window so the styling works here!
+    // Injecting Tailwind CSS for preview/sandbox support
     if (!document.getElementById("tailwind-cdn")) {
       const script = document.createElement("script");
       script.id = "tailwind-cdn";
