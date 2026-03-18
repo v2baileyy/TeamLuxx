@@ -317,14 +317,6 @@ export default function App() {
   );
 
   useEffect(() => {
-    // Injecting Tailwind CSS for preview/sandbox support
-    if (!document.getElementById("tailwind-cdn")) {
-      const script = document.createElement("script");
-      script.id = "tailwind-cdn";
-      script.src = "https://cdn.tailwindcss.com";
-      document.head.appendChild(script);
-    }
-
     const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
@@ -469,6 +461,7 @@ export default function App() {
           <button
             className="md:hidden text-white"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle Navigation Menu"
           >
             {mobileMenuOpen ? <X /> : <Menu />}
           </button>
@@ -945,6 +938,7 @@ export default function App() {
               href="https://tiktok.com/@luxxesports"
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="Visit Team Luxx on TikTok"
               className="w-10 h-10 rounded-full bg-[#0c0714] border border-[#2a2438] flex items-center justify-center text-white hover:bg-[#22D3EE] hover:text-[#030014] hover:border-[#22D3EE] transition-all hover:shadow-[0_0_15px_rgba(34,211,238,0.4)]"
             >
               <Video className="w-5 h-5" />
