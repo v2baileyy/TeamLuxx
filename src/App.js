@@ -739,7 +739,7 @@ export default function App() {
             </div>
           </div>
 
-          {/* Members Header */}
+          {/* Members Header Match exactly to screenshot */}
           <div>
             <div className="flex items-start gap-5 mb-10">
               <div className="w-[52px] h-[52px] border border-[#123842] flex-shrink-0 flex items-center justify-center bg-transparent">
@@ -842,6 +842,7 @@ export default function App() {
 
               <div className="grid md:grid-cols-2 gap-12 items-start">
                 <div className="flex flex-col gap-5">
+                  {/* DM Buttons */}
                   <a
                     href="https://tiktok.com/@lolitsphe"
                     target="_blank"
