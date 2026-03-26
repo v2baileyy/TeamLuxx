@@ -90,11 +90,6 @@ const ROSTER = {
       link: "https://tiktok.com/@ifearurfate",
     },
     {
-      name: "r1jasmine",
-      handle: "@r1jasmine",
-      link: "https://www.tiktok.com/@r1jasmine?lang=en",
-    },
-    {
       name: "zb.jsn",
       handle: "@zb.jsn",
       link: "https://www.tiktok.com/@zb.jsn?lang=en",
@@ -118,6 +113,16 @@ const ROSTER = {
       name: "Arlyn",
       handle: "@xo_arlynn",
       link: "https://www.tiktok.com/@xo_arlynn",
+    },
+    {
+      name: "Ben",
+      handle: "@ben65808",
+      link: "https://www.tiktok.com/@ben65808",
+    },
+    {
+      name: "Coyo",
+      handle: "@shevcoyote4",
+      link: "https://www.tiktok.com/@shevcoyote4",
     },
   ],
 };
@@ -739,7 +744,7 @@ export default function App() {
             </div>
           </div>
 
-          {/* Members Header Match exactly to screenshot */}
+          {/* Members Header */}
           <div>
             <div className="flex items-start gap-5 mb-10">
               <div className="w-[52px] h-[52px] border border-[#123842] flex-shrink-0 flex items-center justify-center bg-transparent">
