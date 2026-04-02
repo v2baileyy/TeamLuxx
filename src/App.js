@@ -15,6 +15,7 @@ import {
   Twitch,
   Radio,
 } from "lucide-react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 
 // --- Data ---
 const ROSTER = {
@@ -952,6 +953,7 @@ export default function App() {
           </div>
         </div>
       </footer>
+      <SpeedInsights />
     </div>
   );
 }
